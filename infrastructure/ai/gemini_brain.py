@@ -111,7 +111,8 @@ class AsyncExpertBrain:
                 "Gemini viene fallando seguido; se pausaron los intentos un momento."
             )
 
-        url = f"{_BASE_URL}/{self._config.modelo}:generateContent?key={self._config.api_key}"
+        url = f"{_BASE_URL}/{self._config.modelo}:generateContent"
+        headers = {"x-goog-api-key": self._config.api_key}
         payload = {"contents": [{"parts": [{"text": prompt}]}]}
         self._stats["requests"] += 1
 
@@ -119,7 +120,7 @@ class AsyncExpertBrain:
 
         for intento in range(1, self._config.max_reintentos + 1):
             try:
-                resp = await self._client.post(url, json=payload)
+                resp = await self._client.post(url, json=payload, headers=headers)
                 data = resp.json()
 
                 if "candidates" in data:
