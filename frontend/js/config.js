@@ -12,4 +12,4 @@ const ES_LOCAL = ['localhost', '127.0.0.1'].includes(window.location.hostname);
 
 const API = ES_LOCAL
   ? 'http://127.0.0.1:8000'
-  : 'https://TU-BACKEND.onrender.com';   // ← reemplaza esto con tu URL real de Render
+  : 'https://pfinance-bvl-backend.onrender.com';   // ← reemplaza esto con tu URL real de Render
