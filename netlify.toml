@@ -17,6 +17,12 @@
   to = "/index.html"
   status = 200
 
+# El dashboard ES index.html — sin esta redirección, /dashboard da 404.
+[[redirects]]
+  from = "/dashboard"
+  to = "/index.html"
+  status = 200
+
 # Asegura que /chat también resuelva bien si alguien entra directo a esa ruta.
 [[redirects]]
   from = "/chat"
