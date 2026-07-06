@@ -1,0 +1,29 @@
+# render.yaml — Pfinance BVL (backend)
+# Este archivo va en la RAÍZ del repositorio (mismo nivel que agents/, backend/, frontend/)
+#
+# En Render: "New +" → "Blueprint" → conecta tu repo de GitHub → Render lee
+# este archivo automáticamente y crea el servicio.
+
+services:
+  - type: web
+    name: pfinance-bvl-backend
+    runtime: python
+    plan: free
+    region: oregon
+    branch: main
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn backend.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      # Estas 4 variables NO se guardan en este archivo por seguridad.
+      # Después de crear el servicio, ve a Render → tu servicio → "Environment"
+      # y añádelas manualmente con los valores reales de tu .env local:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        sync: false
+      - key: ALPHA_VANTAGE_KEY
+        sync: false
+      - key: NEWS_API_KEY
+        sync: false

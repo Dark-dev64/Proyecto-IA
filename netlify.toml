@@ -1,0 +1,24 @@
+# netlify.toml — Pfinance BVL (frontend)
+# Este archivo va en la RAÍZ del repositorio (mismo nivel que agents/, backend/, frontend/)
+
+[build]
+  # No hay paso de build: es HTML/CSS/JS plano, se sirve tal cual.
+  command = ""
+  # Carpeta que Netlify debe publicar como sitio estático.
+  publish = "frontend"
+
+[build.environment]
+  # Evita que Netlify intente detectar un framework Node/Python inexistente.
+  NODE_VERSION = "20"
+
+# Redirige la raíz del sitio de Netlify a index.html explícitamente (por si acaso).
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+
+# Asegura que /chat también resuelva bien si alguien entra directo a esa ruta.
+[[redirects]]
+  from = "/chat"
+  to = "/chat.html"
+  status = 200

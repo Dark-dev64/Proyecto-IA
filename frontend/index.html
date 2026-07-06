@@ -1,4 +1,4 @@
-  <!-- //frontend/index.html -->
+<!-- //frontend/index.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -49,7 +49,15 @@
     <section class="controls">
       <div class="ctrl-group">
         <div class="ctrl-label"><i class="fa-solid fa-list"></i> Activos a analizar</div>
+        <div class="activos-search-wrap">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="activos-search" placeholder="Buscar empresa o ticker... (presiona /)" oninput="filterActivosGrid(this.value)">
+        </div>
         <div class="activos-grid" id="activos-grid"></div>
+        <label class="fav-filter-wrap">
+          <input type="checkbox" id="fav-filter" onchange="applyFavoritosFilter(this.checked)">
+          <i class="fa-solid fa-star"></i> Mostrar solo favoritos
+        </label>
       </div>
       <div class="perfil-wrap">
         <div class="ctrl-label"><i class="fa-solid fa-user"></i> Perfil de riesgo</div>
@@ -60,6 +68,20 @@
         </select>
         <div id="perfil-msg" class="perfil-msg moderado">
           <i class="fa-solid fa-circle-info"></i> Busca equilibrio entre seguridad y rendimiento. Tolera caídas de hasta 2%.
+        </div>
+      </div>
+      <div class="ctrl-group" style="flex:0 0 auto;min-width:160px;">
+        <div class="ctrl-label"><i class="fa-solid fa-arrows-rotate"></i> Auto-actualización</div>
+        <div class="refresh-controls">
+          <label class="switch">
+            <input type="checkbox" id="auto-refresh-toggle" onchange="toggleAutoRefresh(this.checked)">
+            <span class="slider"></span>
+          </label>
+          <select class="perfil-select" id="refresh-interval" onchange="updateRefreshInterval(this.value)">
+            <option value="15">15s</option>
+            <option value="30" selected>30s</option>
+            <option value="60">60s</option>
+          </select>
         </div>
       </div>
       <button class="btn-analizar" onclick="analizar()">
@@ -84,7 +106,21 @@
       </div>
 
       <div class="sec-label"><i class="fa-solid fa-chart-simple"></i> Precios en tiempo real — Bolsa de Valores de Lima</div>
+
+      <div class="metrics-toolbar">
+        <div class="sort-controls" id="sort-controls">
+          <button class="sort-btn active" data-sort="default" onclick="sortMetrics('default', this)"><i class="fa-solid fa-arrow-down-wide-short"></i> Original</button>
+          <button class="sort-btn" data-sort="precio" onclick="sortMetrics('precio', this)">Precio</button>
+          <button class="sort-btn" data-sort="variacion" onclick="sortMetrics('variacion', this)">Variación</button>
+          <button class="sort-btn" data-sort="alfabetico" onclick="sortMetrics('alfabetico', this)">A-Z</button>
+        </div>
+        <button class="compare-toggle-btn" id="compare-toggle-btn" onclick="toggleCompareMode()">
+          <i class="fa-solid fa-code-compare"></i> Comparar activos
+        </button>
+      </div>
+
       <div id="metrics-grid" class="metrics-grid"></div>
+      <div id="compare-panel" class="compare-panel" style="display:none;"></div>
 
       <div class="charts-row">
         <div class="chart-card">
@@ -127,6 +163,14 @@
   <footer class="footer">
     <i class="fa-solid fa-copyright"></i> SISTEMA EXPERTO BVL · UPAO 2026 · Python 3.12 + FastAPI + Gemini Transformer + CLIPS + Chart.js
   </footer>
+
+  <!-- TOASTS -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Tip de atajos -->
+  <div style="position:fixed;bottom:20px;left:20px;font-size:.62rem;color:var(--muted);font-family:'JetBrains Mono',monospace;opacity:.6;">
+    <kbd>/</kbd> buscar · <kbd>Enter</kbd> analizar · <kbd>Esc</kbd> limpiar
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="/frontend/js/config.js"></script>
