@@ -4,6 +4,7 @@ Este archivo solo ensambla la aplicación: crea los singletons (agentes) una
 vez al arrancar, monta el frontend estático e incluye los routers. Toda la
 lógica de endpoints vive en backend/routers/.
 """
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -44,7 +45,12 @@ app.add_middleware(
 )
 
 # ── Frontend estático ──
-app.mount("/frontend", StaticFiles(directory=FRONTEND_DIR), name="frontend")
+# El HTML pide rutas en la raíz: /css/base.css, /js/chat.js, etc.
+# Montamos /css y /js directamente en sus subcarpetas de frontend/,
+# en vez de montar todo bajo el prefijo /frontend (que no coincide
+# con lo que el HTML realmente solicita).
+app.mount("/css", StaticFiles(directory=os.path.join(FRONTEND_DIR, "css")), name="css")
+app.mount("/js", StaticFiles(directory=os.path.join(FRONTEND_DIR, "js")), name="js")
 
 # ── Routers ──
 app.include_router(info.router)
