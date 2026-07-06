@@ -22,6 +22,12 @@ Novedades sobre la versión anterior:
   Google, con prefijo AQ., requieren este método en vez de `?key=` en la URL).
 - Manejo defensivo de respuestas vacías/no-JSON de Gemini: en vez de un
   500 crudo, se registra el status_code y el cuerpo real para diagnóstico.
+
+FIX (2026-07-06): en la rama de rate limit (429) del método _generar(), antes
+se llamaba a asyncio.sleep(espera) incondicionalmente, incluso en el último
+intento disponible — desperdiciando 15s+ de espera del usuario sin que
+hubiera ningún reintento real después. Ahora se valida `intento < max_reintentos`
+antes de dormir, igual que ya hacía la rama de respuesta no-JSON.
 """
 from __future__ import annotations
 
@@ -159,18 +165,30 @@ class AsyncExpertBrain:
                     x in mensaje.lower() for x in ("high demand", "overloaded", "try again")
                 ):
                     ultimo_error = GeminiRateLimitError(mensaje)
-                    espera = 15 * intento
+                    # FIX: antes se dormía siempre, incluso en el último intento
+                    # disponible, desperdiciando 15s+ sin que hubiera reintento
+                    # real después. Ahora solo se duerme si de verdad va a
+                    # haber otro intento.
+                    if intento < self._config.max_reintentos:
+                        espera = 15 * intento
+                        logger.warning(
+                            "Gemini rate limit (intento %d/%d). Esperando %ds.",
+                            intento, self._config.max_reintentos, espera,
+                        )
+                        await asyncio.sleep(espera)
+                        continue
                     logger.warning(
-                        "Gemini rate limit (intento %d/%d). Esperando %ds.",
-                        intento, self._config.max_reintentos, espera,
+                        "Gemini rate limit (intento %d/%d). Sin más reintentos disponibles.",
+                        intento, self._config.max_reintentos,
                     )
-                    await asyncio.sleep(espera)
-                    continue
+                    break
 
                 if codigo == 503:
                     ultimo_error = GeminiError(f"Gemini no disponible (503): {mensaje}")
-                    await asyncio.sleep(20)
-                    continue
+                    if intento < self._config.max_reintentos:
+                        await asyncio.sleep(20)
+                        continue
+                    break
 
                 # Error no recuperable — no tiene sentido reintentar
                 logger.error("Error no recuperable de Gemini (código %s): %s", codigo, mensaje)
