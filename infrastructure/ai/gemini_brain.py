@@ -18,6 +18,10 @@ Novedades sobre la versión anterior:
 - Métricas básicas (requests, fallos, cache hits) vía `stats()`.
 - Soporta `async with AsyncExpertBrain(...) as brain:` para cerrar el
   cliente httpx automáticamente.
+- Autenticación vía header `x-goog-api-key` (las nuevas "Auth keys" de
+  Google, con prefijo AQ., requieren este método en vez de `?key=` en la URL).
+- Manejo defensivo de respuestas vacías/no-JSON de Gemini: en vez de un
+  500 crudo, se registra el status_code y el cuerpo real para diagnóstico.
 """
 from __future__ import annotations
 
@@ -79,7 +83,7 @@ class AsyncExpertBrain:
             "cache": self._cache.stats(),
             "circuito": self._circuit.stats(),
         }
-    
+
     # ── Prompt libre (usado por el chat conversacional) ──
 
     async def generar_respuesta_libre(self, prompt: str) -> str:
@@ -121,7 +125,27 @@ class AsyncExpertBrain:
         for intento in range(1, self._config.max_reintentos + 1):
             try:
                 resp = await self._client.post(url, json=payload, headers=headers)
-                data = resp.json()
+
+                try:
+                    data = resp.json()
+                except ValueError:
+                    # Cuerpo vacío o no-JSON. Suele indicar un rechazo a
+                    # nivel de red/proxy antes de llegar a la API real de
+                    # Gemini, o una key inválida/mal copiada.
+                    logger.error(
+                        "Respuesta no-JSON de Gemini (status %d): %r",
+                        resp.status_code, resp.text[:300],
+                    )
+                    ultimo_error = GeminiError(
+                        f"Gemini devolvió una respuesta vacía o inválida "
+                        f"(HTTP {resp.status_code}). Revisa GEMINI_API_KEY y GEMINI_MODEL."
+                    )
+                    if intento < self._config.max_reintentos:
+                        await asyncio.sleep(3)
+                        continue
+                    self._circuit.registrar_fallo()
+                    self._stats["fallos"] += 1
+                    raise ultimo_error
 
                 if "candidates" in data:
                     self._circuit.registrar_exito()
@@ -149,10 +173,11 @@ class AsyncExpertBrain:
                     continue
 
                 # Error no recuperable — no tiene sentido reintentar
+                logger.error("Error no recuperable de Gemini (código %s): %s", codigo, mensaje)
                 self._circuit.registrar_fallo()
                 raise GeminiError(f"Error de Gemini: {mensaje}")
 
-            except httpx.TimeoutException as exc:
+            except httpx.TimeoutException:
                 ultimo_error = GeminiTimeoutError("Gemini no respondió a tiempo.")
                 logger.warning("Timeout intento %d/%d", intento, self._config.max_reintentos)
                 if intento < self._config.max_reintentos:
