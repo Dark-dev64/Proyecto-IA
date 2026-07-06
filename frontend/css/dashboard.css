@@ -98,6 +98,10 @@ body {
   font-size: 0.76rem;
   color: var(--text2);
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .activo-item.selected .activo-label {
   color: var(--blue2);
@@ -149,6 +153,7 @@ body {
   color: var(--text);
   font-family: 'Inter', sans-serif;
   font-size: 0.78rem;
+  min-width: 0;
 }
 .activos-search-wrap input::placeholder {
   color: var(--muted);
@@ -173,6 +178,7 @@ body {
   gap: 8px;
   min-width: 200px;
   max-width: 260px;
+  flex: 1;
 }
 .perfil-msg {
   border-radius: 6px;
@@ -259,6 +265,7 @@ body {
   box-shadow: 0 4px 16px rgba(41, 121, 255, 0.25);
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
 }
 .btn-analizar:hover {
@@ -307,6 +314,7 @@ body {
   font-size: 0.7rem;
   color: var(--muted);
   font-family: 'JetBrains Mono', monospace;
+  white-space: nowrap;
 }
 .info-item i {
   font-size: 0.75rem;
@@ -318,6 +326,7 @@ body {
   background: var(--cyan);
   box-shadow: 0 0 6px rgba(0, 229, 255, 0.4);
   animation: pulse 2s infinite;
+  flex-shrink: 0;
 }
 .info-item strong {
   color: var(--text);
@@ -360,6 +369,7 @@ body {
 .sort-controls {
   display: flex;
   gap: 4px;
+  flex-wrap: wrap;
 }
 .sort-btn {
   background: var(--card);
@@ -371,6 +381,7 @@ body {
   cursor: pointer;
   font-family: 'JetBrains Mono', monospace;
   transition: var(--transition);
+  white-space: nowrap;
 }
 .sort-btn:hover {
   border-color: var(--border2);
@@ -395,6 +406,7 @@ body {
   transition: var(--transition);
   font-family: 'Inter', sans-serif;
   font-weight: 500;
+  white-space: nowrap;
 }
 .compare-toggle-btn:hover {
   border-color: var(--border2);
@@ -475,6 +487,7 @@ body {
   cursor: pointer;
   transition: var(--transition);
   z-index: 2;
+  padding: 4px;
 }
 .card-star:hover {
   color: var(--gold);
@@ -571,6 +584,7 @@ body {
   gap: 8px;
   justify-content: center;
   padding: 12px;
+  text-align: center;
 }
 .compare-header {
   display: grid;
@@ -583,6 +597,7 @@ body {
   font-weight: 600;
   color: var(--text);
   text-align: center;
+  overflow-wrap: anywhere;
 }
 .compare-col-title.center {
   color: var(--muted);
@@ -613,6 +628,7 @@ body {
   font-family: 'JetBrains Mono', monospace;
   padding: 4px 8px;
   border-radius: 6px;
+  overflow-wrap: anywhere;
 }
 .compare-cell.better {
   color: var(--green);
@@ -632,6 +648,10 @@ body {
   border: 1px solid var(--border2);
   border-radius: var(--radius);
   padding: 18px 20px;
+  min-width: 0;
+}
+.chart-card canvas {
+  max-width: 100%;
 }
 .chart-title {
   font-size: 0.62rem;
@@ -651,6 +671,7 @@ body {
   height: 14px;
   background: linear-gradient(to bottom, var(--blue), var(--cyan));
   border-radius: 1px;
+  flex-shrink: 0;
 }
 .chart-title i {
   font-size: 0.7rem;
@@ -663,6 +684,11 @@ body {
   border-bottom: 1px solid var(--border);
   margin-bottom: 16px;
   gap: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar {
+  display: none;
 }
 .tab-btn {
   background: none;
@@ -678,6 +704,8 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .tab-btn i {
   font-size: 0.85rem;
@@ -706,6 +734,7 @@ body {
   border-radius: 6px;
   border: 1px solid var(--border);
   font-family: 'JetBrains Mono', monospace;
+  overflow-wrap: anywhere;
 }
 .rules-list {
   display: flex;
@@ -783,6 +812,7 @@ body {
   font-size: 0.86rem;
   line-height: 1.8;
   color: var(--text2);
+  overflow-wrap: anywhere;
 }
 .ia-output h2 {
   font-size: 0.9rem;
@@ -875,4 +905,146 @@ body {
 }
 .toast.info i {
   color: var(--cyan);
+}
+
+/* ── SHORTCUT HINT ── */
+.shortcut-hint {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  font-size: 0.62rem;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+  opacity: 0.6;
+  z-index: 5;
+}
+.shortcut-hint kbd {
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .container {
+    padding: 16px 18px;
+  }
+  .charts-row {
+    grid-template-columns: 1fr;
+  }
+  .metrics-grid {
+    grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+  }
+}
+
+/* Móvil grande */
+@media (max-width: 768px) {
+  .container {
+    padding: 14px;
+  }
+  .controls {
+    padding: 16px;
+    gap: 14px;
+  }
+  .ctrl-group,
+  .perfil-wrap {
+    min-width: 100%;
+    max-width: none;
+  }
+  .activos-grid {
+    grid-template-columns: 1fr;
+  }
+  .btn-analizar {
+    align-self: stretch;
+    width: 100%;
+    padding: 12px 20px;
+  }
+  .refresh-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .info-panel {
+    padding: 12px 14px;
+    gap: 8px 16px;
+  }
+  .metrics-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .sort-controls {
+    justify-content: flex-start;
+  }
+  .compare-toggle-btn {
+    justify-content: center;
+  }
+  .metrics-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 6px;
+  }
+  .mcard {
+    padding: 12px 12px;
+  }
+  .compare-header,
+  .compare-row {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 4px;
+  }
+  .compare-row {
+    padding: 10px 0;
+  }
+  .compare-label {
+    order: -1;
+    color: var(--blue2);
+  }
+  .compare-col-title.center {
+    display: none;
+  }
+  .tab-btn {
+    padding: 10px 14px;
+    font-size: 0.76rem;
+  }
+  .toast-container {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    max-width: none;
+  }
+  .shortcut-hint {
+    display: none;
+  }
+}
+
+/* Móvil */
+@media (max-width: 480px) {
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .mval {
+    font-size: 1rem;
+  }
+  .sec-label {
+    font-size: 0.58rem;
+  }
+  .ia-output {
+    padding: 16px 16px;
+  }
+  .chart-card {
+    padding: 14px 14px;
+  }
+  .footer {
+    font-size: 0.55rem;
+  }
+}
+
+/* Pantallas táctiles: tarjetas no dependen de drag */
+@media (hover: none) {
+  .mcard {
+    cursor: pointer;
+  }
 }

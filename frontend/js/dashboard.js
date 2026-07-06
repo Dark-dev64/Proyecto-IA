@@ -437,6 +437,7 @@ function renderGraficas(activos) {
     },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       onClick: (evt, elements) => {
         if (!elements.length) return;
         const idx = elements[0].index;
@@ -480,6 +481,7 @@ function renderGraficas(activos) {
     },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       cutout: '70%',
       onClick: (evt, elements) => {
         if (!elements.length) return;

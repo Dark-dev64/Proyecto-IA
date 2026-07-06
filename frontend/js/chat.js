@@ -14,7 +14,32 @@ document.addEventListener('DOMContentLoaded', async () => {
   await cargarTickers();
   cargarEmpresas();
   setupInput();
+  setupSidebarMobile();
 });
+
+/* ══════════════ SIDEBAR MÓVIL (off-canvas) ══════════════ */
+function setupSidebarMobile() {
+  const mq = window.matchMedia('(max-width: 768px)');
+  mq.addEventListener('change', (e) => { if (!e.matches) closeSidebar(); });
+}
+
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const isOpen = sidebar.classList.contains('open');
+  isOpen ? closeSidebar() : openSidebar();
+}
+
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebar-overlay').classList.add('show');
+  document.getElementById('sidebar-toggle').setAttribute('aria-expanded', 'true');
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('show');
+  document.getElementById('sidebar-toggle').setAttribute('aria-expanded', 'false');
+}
 
 async function verificarBackend() {
   try {
@@ -65,7 +90,7 @@ function cargarEmpresas() {
   };
   const list = document.getElementById('empresa-list');
   list.innerHTML = Object.entries(empresas).map(([ticker, nombre]) => `
-    <button class="empresa-btn" onclick="enviarRapido('Analiza ${nombre} (${ticker}) y dime si es buena inversión ahora mismo')">
+    <button class="empresa-btn" onclick="enviarRapido('Analiza ${nombre} (${ticker}) y dime si es buena inversión ahora mismo'); closeSidebar();">
       <span><span class="empresa-icon"><i class="fa-regular fa-building"></i></span> ${nombre}</span>
       <span class="empresa-ticker-tag">${ticker.replace('.LM', '')}</span>
     </button>

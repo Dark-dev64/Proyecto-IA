@@ -5,6 +5,7 @@
 
 body {
   height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -15,6 +16,22 @@ body {
   display: flex;
   flex: 1;
   overflow: hidden;
+  position: relative;
+}
+
+/* ── SIDEBAR OVERLAY (móvil) ── */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 149;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.sidebar-overlay.show {
+  display: block;
+  opacity: 1;
 }
 
 /* ── SIDEBAR ── */
@@ -25,6 +42,7 @@ body {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  transition: transform 0.22s ease;
 }
 .sidebar-section {
   padding: 16px 16px 8px;
@@ -93,6 +111,7 @@ body {
   gap: 1px;
   overflow-y: auto;
   flex: 1;
+  min-height: 60px;
 }
 .empresa-btn {
   background: none;
@@ -221,6 +240,7 @@ body {
   flex-direction: column;
   overflow: hidden;
   background: var(--bg);
+  min-width: 0;
 }
 
 /* ── MESSAGES ── */
@@ -292,6 +312,8 @@ body {
   background: var(--card);
   border: 1px solid var(--border2);
   border-radius: var(--radius);
+  flex-wrap: wrap;
+  justify-content: center;
 }
 .wstat {
   text-align: center;
@@ -374,11 +396,15 @@ body {
   border: 1px solid var(--border2);
   color: var(--text2);
 }
+.msg-content {
+  min-width: 0;
+}
 .msg-bubble {
   padding: 12px 18px;
   border-radius: 10px;
   font-size: 0.86rem;
   line-height: 1.75;
+  overflow-wrap: anywhere;
 }
 .msg.assistant .msg-bubble {
   background: var(--card);
@@ -428,6 +454,7 @@ body {
   align-items: center;
   gap: 12px;
   margin-top: 5px;
+  flex-wrap: wrap;
 }
 .msg-time {
   font-size: 0.6rem;
@@ -580,6 +607,7 @@ body {
   align-items: center;
   margin-top: 8px;
   padding: 0 2px;
+  gap: 8px;
 }
 .input-hint {
   font-size: 0.62rem;
@@ -590,4 +618,93 @@ body {
   font-size: 0.62rem;
   color: var(--muted);
   font-family: 'JetBrains Mono', monospace;
+  white-space: nowrap;
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════ */
+
+/* Tablet: sidebar más angosta */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 210px;
+  }
+  .messages {
+    padding: 20px 22px;
+  }
+  .input-area {
+    padding: 14px 22px 18px;
+  }
+}
+
+/* Móvil: sidebar se convierte en panel off-canvas */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 52px;
+    bottom: 0;
+    left: 0;
+    width: min(80vw, 280px);
+    z-index: 150;
+    transform: translateX(-100%);
+    box-shadow: 0 0 32px rgba(0, 0, 0, 0.5);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .messages {
+    padding: 16px;
+    gap: 14px;
+  }
+  .msg {
+    max-width: 92%;
+  }
+  .welcome {
+    padding: 32px 20px;
+  }
+  .welcome-title {
+    font-size: 1.4rem;
+  }
+  .welcome-sub {
+    font-size: 0.82rem;
+  }
+  .welcome-stats {
+    gap: 14px;
+    padding: 12px 16px;
+  }
+  .input-area {
+    padding: 10px 14px 14px;
+  }
+  .input-hint {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .msg-bubble {
+    font-size: 0.82rem;
+    padding: 10px 14px;
+  }
+  .msg-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 0.7rem;
+  }
+  .welcome-logo {
+    width: 56px;
+    height: 56px;
+    font-size: 1.2rem;
+  }
+  .welcome-title {
+    font-size: 1.2rem;
+  }
+  .chip {
+    font-size: 0.72rem;
+    padding: 7px 14px;
+  }
+  .btn-send {
+    width: 34px;
+    height: 34px;
+  }
 }

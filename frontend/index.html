@@ -3,7 +3,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Sistema Experto BVL — Dashboard</title>
   <!-- Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -23,8 +23,8 @@
       </a>
       <span class="logo-tag">SISTEMA EXPERTO · UPAO 2026</span>
       <nav class="topbar-nav" style="margin-left:16px;">
-        <a href="/chat" class="nav-btn"><i class="fa-solid fa-comment"></i> Chat</a>
-        <a href="/dashboard" class="nav-btn active"><i class="fa-solid fa-chart-simple"></i> Dashboard</a>
+        <a href="/chat" class="nav-btn"><i class="fa-solid fa-comment"></i> <span>Chat</span></a>
+        <a href="/dashboard" class="nav-btn active"><i class="fa-solid fa-chart-simple"></i> <span>Dashboard</span></a>
       </nav>
     </div>
     <div class="topbar-right">
@@ -62,9 +62,9 @@
       <div class="perfil-wrap">
         <div class="ctrl-label"><i class="fa-solid fa-user"></i> Perfil de riesgo</div>
         <select class="perfil-select" id="sel-perfil" onchange="cambiarPerfil(this.value)">
-          <option value="Conservador"><i class="fa-solid fa-shield"></i> Conservador</option>
-          <option value="Moderado" selected><i class="fa-solid fa-scale-balanced"></i> Moderado</option>
-          <option value="Agresivo"><i class="fa-solid fa-bolt"></i> Agresivo</option>
+          <option value="Conservador">Conservador</option>
+          <option value="Moderado" selected>Moderado</option>
+          <option value="Agresivo">Agresivo</option>
         </select>
         <div id="perfil-msg" class="perfil-msg moderado">
           <i class="fa-solid fa-circle-info"></i> Busca equilibrio entre seguridad y rendimiento. Tolera caídas de hasta 2%.
@@ -168,7 +168,7 @@
   <div id="toast-container" class="toast-container"></div>
 
   <!-- Tip de atajos -->
-  <div style="position:fixed;bottom:20px;left:20px;font-size:.62rem;color:var(--muted);font-family:'JetBrains Mono',monospace;opacity:.6;">
+  <div class="shortcut-hint">
     <kbd>/</kbd> buscar · <kbd>Enter</kbd> analizar · <kbd>Esc</kbd> limpiar
   </div>
 

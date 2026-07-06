@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Pfinance — Asesor BVL</title>
   <!-- Font Awesome 6 (gratuito) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -14,6 +14,9 @@
   <!-- TOPBAR -->
   <header class="topbar">
     <div class="topbar-left">
+      <button class="menu-toggle" id="sidebar-toggle" aria-label="Abrir menú" aria-expanded="false" onclick="toggleSidebar()">
+        <i class="fa-solid fa-bars"></i>
+      </button>
       <a href="/" class="logo">
         <div class="logo-icon">PF</div>
         <div>
@@ -23,16 +26,16 @@
       <span class="logo-tag">SISTEMA EXPERTO · UPAO 2026</span>
     </div>
     <nav class="topbar-nav">
-      <a href="/chat" class="nav-btn active"><i class="fa-solid fa-comment"></i> Chat</a>
-      <a href="/dashboard" class="nav-btn"><i class="fa-solid fa-chart-simple"></i> Dashboard</a>
+      <a href="/chat" class="nav-btn active"><i class="fa-solid fa-comment"></i> <span>Chat</span></a>
+      <a href="/dashboard" class="nav-btn"><i class="fa-solid fa-chart-simple"></i> <span>Dashboard</span></a>
     </nav>
     <div class="topbar-right">
       <div class="perfil-wrap-inline">
         <span class="perfil-label"><i class="fa-solid fa-user"></i> Perfil</span>
         <select class="perfil-select" id="sel-perfil">
-          <option value="Conservador"><i class="fa-solid fa-shield"></i> Conservador</option>
-          <option value="Moderado" selected><i class="fa-solid fa-scale-balanced"></i> Moderado</option>
-          <option value="Agresivo"><i class="fa-solid fa-bolt"></i> Agresivo</option>
+          <option value="Conservador">Conservador</option>
+          <option value="Moderado" selected>Moderado</option>
+          <option value="Agresivo">Agresivo</option>
         </select>
       </div>
       <div class="status-pill">
@@ -52,8 +55,11 @@
   <!-- MAIN -->
   <div class="main">
 
+    <!-- OVERLAY (móvil) -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
     <!-- SIDEBAR -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
       <div class="sidebar-section"><i class="fa-solid fa-bolt"></i> Accesos rápidos</div>
       <div class="quick-btns">
         <button class="quick-btn" onclick="enviarRapido('¿Cómo está el mercado BVL hoy?')">
